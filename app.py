@@ -1,22 +1,25 @@
-from tornado import web, gen, template, websocket
+from tornado import web, gen, websocket
 from tornado.ioloop import IOLoop
 from tornado.httpserver import HTTPServer
-from tornado.options import parse_command_line
 from tornado.escape import json_decode
 from db import dsn
 import psycopg2
 import momoko
 import arrow
 import json
-import os
+import logging
 
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
-WSS = [] # websockets
+WSS = []  # websockets
+
 
 class SocketHandler(websocket.WebSocketHandler):
-
-    # javascript snippet to test:
-    # socket = new WebSocket('ws://127.0.0.1:5000/v1/ws');
+    """
+    The websocket handler defines the basic functionality of the
+    websockets. Javascript snippet to try in browser:
+    socket = new WebSocket('ws://127.0.0.1:5000/v1/ws');
+    """
 
     def check_origin(self, origin):
         return True
@@ -34,6 +37,11 @@ class SocketHandler(websocket.WebSocketHandler):
 
 
 class BaseHandler(web.RequestHandler):
+    """
+    Helper class to store frequently accessed properties like
+    database connection and queries.
+    """
+
     @property
     def db(self):
         return self.application.db
@@ -54,6 +62,11 @@ class BaseHandler(web.RequestHandler):
 
 
 class MetricsAPI(BaseHandler):
+    """
+    This is the main meat of the API.  Here we define the GET and POST handling.
+    Note that 'name' must either be an empyt list or a list of one element to be
+    to the the db.execute.
+    """
 
     @gen.coroutine
     def get(self):
@@ -63,13 +76,13 @@ class MetricsAPI(BaseHandler):
             ets = self.get_arguments('ets')
             sts = sts[0] if len(sts) == 1 else None
             ets = ets[0] if len(ets) == 1 else None
-            params = dict(name=name,sts=sts,ets=ets)
+            params = dict(name=name, sts=sts, ets=ets)
             cursor = yield self.db.execute(self.select, params)
         except (psycopg2.Warning, psycopg2.Error) as error:
             self.write(str(error))
         else:
             self.write(json.dumps([m[0] for m in cursor.fetchall()]))
-        self.finish()
+        self.finish()  # ends the http part of the request
 
     @gen.coroutine
     def post(self):
@@ -82,18 +95,19 @@ class MetricsAPI(BaseHandler):
             self.write(str(error))
         else:
             self.write(json.dumps({'resp': 'success'}))
-        self.finish()
+        self.finish()  # ends the http part of the request
         for ws in WSS:
             ws.write_message(metric['raw'])
 
 
 class IndexHandler(web.RequestHandler):
+    """Serves the index.html page"""
+
     def get(self):
         self.render("index.html")
 
 
 if __name__ == '__main__':
-    parse_command_line()
 
     app = web.Application(
         handlers=[
@@ -115,7 +129,7 @@ if __name__ == '__main__':
     future = app.db.connect()
     ioloop.add_future(future, lambda f: ioloop.stop())
     ioloop.start()
-    future.result()  # raises exception on connection error
+    future.result()  # raises exception on database connection error
     server = HTTPServer(app)
     server.listen(5000, "127.0.0.1")
     ioloop.start()

@@ -3,17 +3,17 @@
 
 ### Intro
 
-The Metrics API is a REST webserver that has three general functionalities:
+The Metrics API is a REST web server that has three general functionalities:
 - Insert new metrics via POST
 - Query metrics via GET
-- Stream updates via websockets
+- Stream updates via web sockets
 
-This server is hardcoded to a free version of Postgresql hosted on Heroku (max 10,000 rows and 20 concurrect connections)
+This server is hard coded to a free version of Postgresql hosted on Heroku (max 10,000 rows and 20 concurrent connections)
 
-Install requirments with pip:
+Install requirements with pip:
 
 ```python
-pip install -r requirments.txt
+pip install -r requirements.txt
 ```
 
 Linux dependencies for psycopg2
@@ -49,18 +49,19 @@ curl -H "Content-Type: application/json" -X POST -d '{"name":"asdf", "ts": "2016
 
 ### Querying for metrics:
 
-Metrics can be queryied by name and / or time range. The three query parameters are:
+Metrics can be queried by name and / or time range. The three query parameters are:
   - name
   - sts (start timestamp)
   - ets (end timestamp)
 
 The start and end timestamps are both **inclusive**.
-Timestamps should follow ISO-8601 conventions.
+Timestamps should follow ISO-8601 conventions but are without time zone.
 
 Omitting all parameters will return everything (SELECT * FROM metrics)
 Omitting 'name' from the request will return all names.
 Omitting timestamps will return the entire range.
 To get an exact timestamp set the sts and ets equal to each other.
+
 
 The return value is a list of 'metric' objects, which are exactly the same as what was originally sent in the POST requests.
 
@@ -99,25 +100,24 @@ curl -X GET "http://127.0.0.1:5000/v1/metrics?name=foo&sts=2016-01-01&ets=2016-0
 curl -X GET "http://127.0.0.1:5000/v1/metrics?name=foo&sts=2016-01-02&ets=2016-01-02"
 ```
 
-  timestamp is greater than or eqaul to 2016-01-02
+  timestamp is greater than or equal to 2016-01-02
       
 ```
 curl -X GET "http://127.0.0.1:5000/v1/metrics?sts=2016-01-02"
 ```
   
-  timestamp is less than or eqaul to 2016-01-02
+  timestamp is less than or equal to 2016-01-02
 
 ```
 curl -X GET "http://127.0.0.1:5000/v1/metrics?ets=2016-01-02"
 ```
 
-### Websockets:
-  Every post request updates a websocket, for example, go to http://127.0.0.1:5000/ as python db.py is running
+### Web sockets:
+  Every post request updates a web socket, for example, go to http://127.0.0.1:5000/ as python db.py is running
 
 
 ### Performance:
-Metrics API is built with the python frameworks Tornado Momoko and Postgresql.  Bechmarks are created using Apache ApacheBench.
-
+Metrics API is built with the python frameworks Tornado Momoko and Postgresql.  Benchmarks are created using ApacheBench.
 
 POST:
 
@@ -156,7 +156,10 @@ POST:
 ### Data Model:
 - Postgresql allows for both a json field and standard sql columns.  The standard columns help greatly with the timestamp range querying.  In fact, all the combinations of GET requests are handled with only one query.  Additionally, the json field allows flexibility for clients to create new keys.  For example, a 'host' key might be helpful to identify which server the metrics are coming from.  The clients can start adding the 'host' key right away and at some later point in time the metrics table could be updated and backfilled with the host column if desired to do so.
 
+
 ### Other:
-There could be more tests.
-The could be more logging.
-Error handeling could be improved.
+- I attempted to use asynchronous programming to optimize for database inserts.  Since most of the API is blocked by I/O, the async paradigm seemed fitting; however, async is still emerging in python and thus there is a bit of a learning curve. In the ApacheBench tests results improved as concurrency increased (from 1 to 10 concurrent requests) therefore the async functionality seems to work as expected.
+- I added web sockets for fun because I was going to try to build a 'real-time' plotting library using http://smoothiecharts.org/ but I didn't have time.  Right now index.html just dumps the results to screen as text.  Getting the chart working should be somewhat trivial.  To get the same effect without using web sockets, some databases, like rethinkDB, provide streaming support.
+- I wrote a basic test suite, but there could be more.
+- I didn't do anything with logging.
+- Error handling could be improved by passing around a standardized error response across HTTP verbs.
