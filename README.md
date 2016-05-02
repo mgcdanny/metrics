@@ -10,6 +10,10 @@ The Metrics API is a REST web server that has three general functionalities:
 
 This server is hard coded to a free version of Postgresql hosted on Heroku (max 10,000 rows and 20 concurrent connections)
 
+
+This project uses python 3.5
+
+
 Install requirements with pip:
 
 ```python
