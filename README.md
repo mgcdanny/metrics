@@ -14,6 +14,7 @@ Install requirments with pip:
 
 ```python
 pip install -r requirments.txt
+```
 
 Linux dependencies for psycopg2
   
@@ -70,9 +71,9 @@ Return all instances where:
   
   name is 'foo':
   
-      ```
-      curl -X GET "http://127.0.0.1:5000/v1/metrics?name=foo"
-      ```
+```
+curl -X GET "http://127.0.0.1:5000/v1/metrics?name=foo"
+```
   
   name is 'foo' and timestamp is greater than or equal to 2016-01-01:
   
