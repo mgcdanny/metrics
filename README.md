@@ -18,9 +18,9 @@ pip install -r requirments.txt
 
 Linux dependencies for psycopg2
   
-  ```
-  sudo apt-get install libpq-dev python-dev
-  ```
+```
+sudo apt-get install libpq-dev python-dev
+```
 
 To start the server on 127.0.0.1:5000 use:
 
@@ -43,9 +43,9 @@ To insert a metric, make a JSON encoded post request containing at least the fol
 
 #### Examples:
 
-    ```
-    curl -H "Content-Type: application/json" -X POST -d '{"name":"asdf", "ts": "2016-01-01", "value": "qwerty"}' "http://127.0.0.1:5000/v1/metrics"
-    ```
+```
+curl -H "Content-Type: application/json" -X POST -d '{"name":"asdf", "ts": "2016-01-01", "value": "qwerty"}' "http://127.0.0.1:5000/v1/metrics"
+```
 
 ### Querying for metrics:
 
@@ -77,39 +77,39 @@ curl -X GET "http://127.0.0.1:5000/v1/metrics?name=foo"
   
   name is 'foo' and timestamp is greater than or equal to 2016-01-01:
   
-      ```
-      curl -X GET "http://127.0.0.1:5000/v1/metrics?name=foo&sts=2016-01-01"
-      ```
+```
+curl -X GET "http://127.0.0.1:5000/v1/metrics?name=foo&sts=2016-01-01"
+```
   
   name is 'foo' and timestamp is less than or equal to 2016-01-02:
   
-      ```
-      curl -X GET "http://127.0.0.1:5000/v1/metrics?ets=2016-01-02"
-      ```
+```
+curl -X GET "http://127.0.0.1:5000/v1/metrics?ets=2016-01-02"
+```
   
   name is 'foo' and timestamp greater than or equal to 2016-01-01 and less than or equal to 2016-01-02:
   
-      ```
-      curl -X GET "http://127.0.0.1:5000/v1/metrics?name=foo&sts=2016-01-01&ets=2016-01-02"
-      ```
+```
+curl -X GET "http://127.0.0.1:5000/v1/metrics?name=foo&sts=2016-01-01&ets=2016-01-02"
+```
   
   name is 'foo' and timestamp is exactly 2016-02-02:
   
-      ```
-      curl -X GET "http://127.0.0.1:5000/v1/metrics?name=foo&sts=2016-01-02&ets=2016-01-02"
-      ```
+```
+curl -X GET "http://127.0.0.1:5000/v1/metrics?name=foo&sts=2016-01-02&ets=2016-01-02"
+```
 
   timestamp is greater than or eqaul to 2016-01-02
       
-      ```
-      curl -X GET "http://127.0.0.1:5000/v1/metrics?sts=2016-01-02"
-      ```
+```
+curl -X GET "http://127.0.0.1:5000/v1/metrics?sts=2016-01-02"
+```
   
   timestamp is less than or eqaul to 2016-01-02
-      
-      ```
-      curl -X GET "http://127.0.0.1:5000/v1/metrics?ets=2016-01-02"
-      ```
+
+```
+curl -X GET "http://127.0.0.1:5000/v1/metrics?ets=2016-01-02"
+```
 
 ### Websockets:
   Every post request updates a websocket, for example, go to http://127.0.0.1:5000/ as python db.py is running
