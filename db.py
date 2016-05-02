@@ -7,23 +7,15 @@ import psycopg2
 from itertools import cycle
 import requests as rq
 
+host =  'postgres://yydnwotpybvjqe:zWt1CPlryiEmQbxL4HRXNpGPs-@ec2-50-16-230-234.compute-1.amazonaws.com:5432/ddnifpbdv12vc6'
 
-host = 'postgres://hmxbsqopfcqsjk:wGXeq1B1_Ya-5HgadWYZ7YPEju@ec2-54-225-165-132.compute-1.amazonaws.com:5432/danhgdplbg6q6f'
-
-dsn = ('dbname=danhgdplbg6q6f '
-      'user=hmxbsqopfcqsjk '
-      'password=wGXeq1B1_Ya-5HgadWYZ7YPEju '
-      'host=ec2-54-225-165-132.compute-1.amazonaws.com '
+dsn = ('dbname=ddnifpbdv12vc6 '
+      'user=yydnwotpybvjqe '
+      'password=zWt1CPlryiEmQbxL4HRXNpGPs- '
+      'host=ec2-50-16-230-234.compute-1.amazonaws.com '
       'port=5432')
 
 conn = psycopg2.connect(dsn)
-
-
-"""
-note: name is a list
-cur.execute("SELECT * FROM metrics WHERE name = ALL(%s) AND ts <@ tsrange(%s, %s, '[]') limit 10;", (name,sts,ets))
-"SELECT * FROM metrics WHERE name = ALL(:name) AND ts <@ tsrange(:sts, :ets, '[]') limit 10;", dict(name=name,sts=sts,ets=ets)
-"""
 
 # engine = create_engine('sqlite:///db', echo=True)
 engine = create_engine(host, echo=True)
@@ -68,8 +60,6 @@ def test_get():
     assert 100 == len(rq.get('http://127.0.0.1:5000/v1/metrics', params=dict(sts='2016-01-01')).json())
     assert 25 == len(rq.get('http://127.0.0.1:5000/v1/metrics', params=dict(ets='2016-01-01')).json())
 
-
-
 if __name__ == '__main__':
     Base.metadata.drop_all()
     Base.metadata.create_all()
@@ -77,5 +67,4 @@ if __name__ == '__main__':
     load_db()
     print('testing queries')
     test_get()
-
-
+    print('testing complete')
