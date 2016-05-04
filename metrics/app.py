@@ -113,8 +113,8 @@ class IndexHandler(web.RequestHandler):
 if __name__ == '__main__':
 
     hobby_url = 'postgres://yydnwotpybvjqe:zWt1CPlryiEmQbxL4HRXNpGPs-@ec2-50-16-230-234.compute-1.amazonaws.com:5432/ddnifpbdv12vc6'
-    host = os.environ.get("HOSTNAME", "127.0.0.1")
-    port = os.environ.get("PORT", "5000")
+    host = os.environ.get("HOST", "127.0.0.1")
+    port = os.environ.get("PORT", 5000)
     db_url = urlparse(os.environ.get("DATABASE_URL", hobby_url))
     dsn = (
         'dbname={} '
@@ -149,5 +149,5 @@ if __name__ == '__main__':
     ioloop.start()
     future.result()  # raises exception on database connection error
     server = HTTPServer(app)
-    server.listen(port, host)
+    server.listen(int(port), host)
     ioloop.start()
