@@ -10,21 +10,6 @@ import logging
 from urllib.parse import urlparse
 import os
 
-hobby_url = 'postgres://yydnwotpybvjqe:zWt1CPlryiEmQbxL4HRXNpGPs-@ec2-50-16-230-234.compute-1.amazonaws.com:5432/ddnifpbdv12vc6'
-
-url = urlparse(os.environ.get("DATABASE_URL", hobby_url))
-
-dsn = (
-    'dbname={} '
-    'user={} '
-    'password={} '
-    'host={} '
-    'port={}'.format(url.path[1:], url.username, url.password, url.hostname, url.port)
-)
-
-
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
-
 
 WSS = []  # websockets
 
@@ -127,6 +112,20 @@ class IndexHandler(web.RequestHandler):
 
 if __name__ == '__main__':
 
+    hobby_url = 'postgres://yydnwotpybvjqe:zWt1CPlryiEmQbxL4HRXNpGPs-@ec2-50-16-230-234.compute-1.amazonaws.com:5432/ddnifpbdv12vc6'
+    host = os.environ.get("DOMAIN", "127.0.0.1")
+    port = os.environ.get("PORT", "5000")
+    db_url = urlparse(os.environ.get("DATABASE_URL", hobby_url))
+    dsn = (
+        'dbname={} '
+        'user={} '
+        'password={} '
+        'host={} '
+        'port={}'.format(db_url.path[1:], db_url.username, db_url.password, db_url.hostname, db_url.port)
+    )
+
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+
     app = web.Application(
         handlers=[
             (r'/', IndexHandler),
@@ -150,5 +149,5 @@ if __name__ == '__main__':
     ioloop.start()
     future.result()  # raises exception on database connection error
     server = HTTPServer(app)
-    server.listen(5000, "127.0.0.1")
+    server.listen(port, host)
     ioloop.start()

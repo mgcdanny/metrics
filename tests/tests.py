@@ -11,8 +11,10 @@ import requests as rq
 import os
 
 hobby_url = 'postgres://yydnwotpybvjqe:zWt1CPlryiEmQbxL4HRXNpGPs-@ec2-50-16-230-234.compute-1.amazonaws.com:5432/ddnifpbdv12vc6'
-
-url = os.environ.get("DATABASE_URL", hobby_url)
+db_url = os.environ.get("DATABASE_URL", hobby_url)
+host = os.environ.get("DOMAIN", "127.0.0.1")
+port = os.environ.get("PORT", 5000)
+url = 'http://' + host + ':' + str(port)
 
 
 def load_db(N=100):
@@ -24,7 +26,7 @@ def load_db(N=100):
     t = cycle(['2016-01-01', '2016-01-02', '2016-01-03', '2016-01-04'])
     for i in range(N):
         data = {'name': next(n), 'value': next(v), 'ts': next(t)}
-        rq.post('http://127.0.0.1:5000/v1/metrics', json=data)
+        rq.post('{}/v1/metrics'.format(url), json=data)
 
 
 def test_get():
@@ -32,19 +34,19 @@ def test_get():
     Helper function to test various combinations of queries
     Shoud be used after load_db function with N=100
     """
-    assert 100 == len(rq.get('http://127.0.0.1:5000/v1/metrics').json())
-    assert 34 == len(rq.get('http://127.0.0.1:5000/v1/metrics', params=dict(name='foo')).json())
-    assert 34 == len(rq.get('http://127.0.0.1:5000/v1/metrics', params=dict(name='foo', sts='2016-01-01')).json())
-    assert 34 == len(rq.get('http://127.0.0.1:5000/v1/metrics', params=dict(name='foo', ets='2016-01-04')).json())
-    assert 9 == len(rq.get('http://127.0.0.1:5000/v1/metrics', params=dict(name='foo', sts='2016-01-01', ets='2016-01-01')).json())
-    assert 25 == len(rq.get('http://127.0.0.1:5000/v1/metrics', params=dict(sts='2016-01-01', ets='2016-01-01')).json())
-    assert 100 == len(rq.get('http://127.0.0.1:5000/v1/metrics', params=dict(sts='2016-01-01')).json())
-    assert 25 == len(rq.get('http://127.0.0.1:5000/v1/metrics', params=dict(ets='2016-01-01')).json())
+    assert 100 == len(rq.get('{}/v1/metrics'.format(url)).json())
+    assert 34 == len(rq.get('{}/v1/metrics'.format(url), params=dict(name='foo')).json())
+    assert 34 == len(rq.get('{}/v1/metrics'.format(url), params=dict(name='foo', sts='2016-01-01')).json())
+    assert 34 == len(rq.get('{}/v1/metrics'.format(url), params=dict(name='foo', ets='2016-01-04')).json())
+    assert 9 == len(rq.get('{}/v1/metrics'.format(url), params=dict(name='foo', sts='2016-01-01', ets='2016-01-01')).json())
+    assert 25 == len(rq.get('{}/v1/metrics'.format(url), params=dict(sts='2016-01-01', ets='2016-01-01')).json())
+    assert 100 == len(rq.get('{}/v1/metrics'.format(url), params=dict(sts='2016-01-01')).json())
+    assert 25 == len(rq.get('{}/v1/metrics'.format(url), params=dict(ets='2016-01-01')).json())
 
 
 if __name__ == '__main__':
 
-    engine = create_engine(url, echo=True)
+    engine = create_engine(db_url, echo=True)
     metadata = schema.MetaData(engine)
     Base = declarative_base(metadata=metadata)
 
