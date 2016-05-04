@@ -129,7 +129,7 @@ if __name__ == '__main__':
     app = web.Application(
         handlers=[
             (r'/', IndexHandler),
-            (r"/static/(.*)", web.StaticFileHandler, {"path": "static/"}),
+            (r'/static/(.*)', web.StaticFileHandler, {'path': 'static/'}),
             (r'/v1/metrics', MetricsAPI),
             (r'/v1/ws', SocketHandler)
         ],
