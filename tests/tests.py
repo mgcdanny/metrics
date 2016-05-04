@@ -8,14 +8,11 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from itertools import cycle
 import requests as rq
+import os
 
-host = 'postgres://yydnwotpybvjqe:zWt1CPlryiEmQbxL4HRXNpGPs-@ec2-50-16-230-234.compute-1.amazonaws.com:5432/ddnifpbdv12vc6'
+hobby_url = 'postgres://yydnwotpybvjqe:zWt1CPlryiEmQbxL4HRXNpGPs-@ec2-50-16-230-234.compute-1.amazonaws.com:5432/ddnifpbdv12vc6'
 
-dsn = ('dbname=ddnifpbdv12vc6 '
-       'user=yydnwotpybvjqe '
-       'password=zWt1CPlryiEmQbxL4HRXNpGPs- '
-       'host=ec2-50-16-230-234.compute-1.amazonaws.com '
-       'port=5432')
+url = os.environ.get("DATABASE_URL", hobby_url)
 
 
 def load_db(N=100):
@@ -47,7 +44,7 @@ def test_get():
 
 if __name__ == '__main__':
 
-    engine = create_engine(host, echo=True)
+    engine = create_engine(url, echo=True)
     metadata = schema.MetaData(engine)
     Base = declarative_base(metadata=metadata)
 

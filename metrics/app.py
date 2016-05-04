@@ -7,14 +7,24 @@ import momoko
 import arrow
 import json
 import logging
+from urllib.parse import urlparse
+import os
 
-dsn = ('dbname=ddnifpbdv12vc6 '
-       'user=yydnwotpybvjqe '
-       'password=zWt1CPlryiEmQbxL4HRXNpGPs- '
-       'host=ec2-50-16-230-234.compute-1.amazonaws.com '
-       'port=5432')
+hobby_url = 'postgres://yydnwotpybvjqe:zWt1CPlryiEmQbxL4HRXNpGPs-@ec2-50-16-230-234.compute-1.amazonaws.com:5432/ddnifpbdv12vc6'
+
+url = urlparse(os.environ.get("DATABASE_URL", hobby_url))
+
+dsn = (
+    'dbname={} '
+    'user={} '
+    'password={} '
+    'host={} '
+    'port={}'.format(url.path[1:], url.username, url.password, url.hostname, url.port)
+)
+
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+
 
 WSS = []  # websockets
 
