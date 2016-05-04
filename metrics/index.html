@@ -38,7 +38,12 @@
                 // Add to SmoothieChart
                 smoothie.addTimeSeries(line1, {strokeStyle:'rgb(0, 255, 0)', fillStyle:'rgba(0, 255, 0, 0.4)', lineWidth:3 });
 
-                var socket = new WebSocket('ws://127.0.0.1:5000/v1/ws');
+                // Support TLS-specific URLs, when appropriate.
+                if (window.location.protocol == 'https:') {
+                  var socket = new WebSocket('wss://'+location.host+'v1/ws';
+                } else {
+                  var socket = new WebSocket('ws://127.0.0.1:5000/v1/ws');
+                };
 
                 socket.onopen = function (e) {
                     socket.send('hello, server, this is the the client');
@@ -56,6 +61,7 @@
                     li.appendChild(document.createTextNode(text));
                     ul.appendChild(li);
                 };
+
 
         </script>
 
