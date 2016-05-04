@@ -13,9 +13,8 @@ import os
 
 hobby_url = 'postgres://yydnwotpybvjqe:zWt1CPlryiEmQbxL4HRXNpGPs-@ec2-50-16-230-234.compute-1.amazonaws.com:5432/ddnifpbdv12vc6'
 db_url = os.environ.get("DATABASE_URL", hobby_url)
-host = os.environ.get("HOSTNAME", "127.0.0.1")
-port = os.environ.get("PORT", 5000)
-url = 'http://' + host + ':' + str(port)
+host = os.environ.get("DOMAIN")
+url = host or 'http://127.0.0.1:5000'
 
 
 def load_db(N=100):
