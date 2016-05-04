@@ -40,7 +40,7 @@
 
                 // Support TLS-specific URLs, when appropriate.
                 if (window.location.protocol == 'https:') {
-                  var socket = new WebSocket('wss://'+location.host+'v1/ws');
+                  var socket = new WebSocket('wss://'+location.host+'/v1/ws');
                 } else {
                   var socket = new WebSocket('ws://127.0.0.1:5000/v1/ws');
                 };
