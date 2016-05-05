@@ -8,11 +8,19 @@ The Metrics API is a REST web server that has three general functionalities:
 - Query metrics via GET
 - Stream updates via web sockets
 
-This server is hard coded to a free version of Postgresql hosted on Heroku (max 10,000 rows and 20 concurrent connections)
 
+### There is a live version of the app at:
+
+https://metrics-dan.herokuapp.com/
+
+GET and POST requests work at:
+
+https://metrics-dan.herokuapp.com/v1/metrics
+
+
+### Install
 
 This project uses python 3.5
-
 
 Install requirements with pip:
 
@@ -127,7 +135,6 @@ Metrics API is built with the python frameworks Tornado Momoko and Postgresql.  
 POST:
 
   ```
-  ab -n 1000 -c 10 -p sample.json -T application/json https://metrics-dan.herokuapp.com/v1/metrics
   ab -n 1000 -c 10 -p sample.json -T application/json http://127.0.0.1:5000/v1/metrics
 
   Server Software:        TornadoServer/4.3
