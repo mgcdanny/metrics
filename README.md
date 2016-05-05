@@ -127,6 +127,7 @@ Metrics API is built with the python frameworks Tornado Momoko and Postgresql.  
 POST:
 
   ```
+  ab -n 1000 -c 10 -p sample.json -T application/json https://metrics-dan.herokuapp.com/v1/metrics
   ab -n 1000 -c 10 -p sample.json -T application/json http://127.0.0.1:5000/v1/metrics
 
   Server Software:        TornadoServer/4.3

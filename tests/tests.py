@@ -11,10 +11,9 @@ import requests as rq
 import os
 
 
-hobby_url = 'postgres://yydnwotpybvjqe:zWt1CPlryiEmQbxL4HRXNpGPs-@ec2-50-16-230-234.compute-1.amazonaws.com:5432/ddnifpbdv12vc6'
-db_url = os.environ.get("DATABASE_URL", hobby_url)
-host = os.environ.get("DOMAIN")
-url = host or 'http://127.0.0.1:5000'
+db_uri = 'postgres://ucpfkrj27c0nrn:p75koifj0pb4an74f6sj24dcioh@ec2-52-0-218-96.compute-1.amazonaws.com:5432/d2680ulvikv4gi'
+db_url = os.environ.get("DATABASE_URL", db_uri)
+url = os.environ.get("DOMAIN", 'http://127.0.0.1:5000')
 
 
 def load_db(N=100):
