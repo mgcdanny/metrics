@@ -11,7 +11,7 @@ import requests as rq
 import os
 
 
-db_uri = 'postgres://ucpfkrj27c0nrn:p75koifj0pb4an74f6sj24dcioh@ec2-52-0-218-96.compute-1.amazonaws.com:5432/d2680ulvikv4gi'
+db_uri = 'postgres://un276avkeq25e:pcslpp83amfhgs6chua3tl2dnli@ec2-23-23-55-244.compute-1.amazonaws.com:5432/dmcraudeua0ma'
 db_url = os.environ.get("DATABASE_URL", db_uri)
 url = os.environ.get("DOMAIN", 'http://127.0.0.1:5000')
 
