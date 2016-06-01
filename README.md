@@ -13,10 +13,14 @@ The Metrics API is a REST web server that has three general functionalities:
 
 https://metrics-dan.herokuapp.com/
 
-GET and POST requests work at:
+## GET and POST requests work at:
 
 https://metrics-dan.herokuapp.com/v1/metrics
 
+For example:
+```
+curl -X GET "https://metrics-dan.herokuapp.com/v1/metrics"
+```
 
 ### Install
 
@@ -228,7 +232,9 @@ GET:
 
 - I attempted to use asynchronous programming to optimize for database inserts.  Since most of the API is blocked by I/O, the async paradigm seemed fitting; however, async is still emerging in python and thus there is a bit of a learning curve. In the ApacheBench tests results improved as concurrency increased (from 1 to 10 concurrent requests) therefore the async functionality seems to work as expected.
 
-- I added web sockets for fun because I wanted to try the plotting library http://smoothiecharts.org.  The index.html has a basic plot and dumps the results to screen as text.
+- An ORM is used to initially set up the database but is not used in the web server because the ORM does not support async queries.
+
+- Web sockets for fun because I wanted to try the plotting library http://smoothiecharts.org.  The index.html has a basic plot and dumps the results to screen as text.  The current implementation of the web sockets has some issues.  Not inteneded for tons of concurrent users.
 
 
 ### TODO
